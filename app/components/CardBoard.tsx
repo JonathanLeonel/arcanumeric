@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Arcanum } from "@/domain/entities/arcanum";
+import { Arcanum, Locale } from "@/domain/entities/arcanum";
 
 const HEX_PATTERN = `
 <svg xmlns="http://www.w3.org/2000/svg" width="56" height="100" viewBox="0 0 56 100">
@@ -15,8 +15,15 @@ const HEX_PATTERN = `
 
 const svgDataUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(HEX_PATTERN)}`;
 
-export default function CardBoard({ arcanum }: { arcanum: Arcanum }) {
+export default function CardBoard({ arcanum, locale }: { arcanum: Arcanum; locale: Locale }) {
   const [revealed, setRevealed] = useState(false);
+
+  const isEs = locale === "es";
+  const displayName = isEs ? arcanum.nameEs : arcanum.name;
+  const subtitle = isEs ? arcanum.name : `${arcanum.nameEs} · ${arcanum.nameFr}`;
+  const keywords = isEs ? arcanum.keywordsEs : arcanum.keywords;
+  const uprightMeaning = isEs ? arcanum.uprightMeaningEs : arcanum.uprightMeaning;
+  const revealLabel = isEs ? "Revelar" : "Reveal";
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-[#0d0d1a]">
@@ -81,7 +88,7 @@ export default function CardBoard({ arcanum }: { arcanum: Arcanum }) {
                 textAlign: "center",
               }}
             >
-              {arcanum.name}
+              {displayName}
             </h2>
             <p
               style={{
@@ -91,7 +98,7 @@ export default function CardBoard({ arcanum }: { arcanum: Arcanum }) {
                 textAlign: "center",
               }}
             >
-              {arcanum.nameEs} · {arcanum.nameFr}
+              {subtitle}
             </p>
             <p
               style={{
@@ -101,7 +108,7 @@ export default function CardBoard({ arcanum }: { arcanum: Arcanum }) {
                 lineHeight: 1.6,
               }}
             >
-              {arcanum.keywords.join(" · ")}
+              {keywords.join(" · ")}
             </p>
             <p
               style={{
@@ -112,7 +119,7 @@ export default function CardBoard({ arcanum }: { arcanum: Arcanum }) {
                 marginTop: "8px",
               }}
             >
-              {arcanum.uprightMeaning}
+              {uprightMeaning}
             </p>
           </div>
         </motion.div>
@@ -129,7 +136,7 @@ export default function CardBoard({ arcanum }: { arcanum: Arcanum }) {
             cursor: "pointer",
           }}
         >
-          Reveal
+          {revealLabel}
         </button>
       )}
     </div>
